@@ -47,12 +47,21 @@ void loop() {
   float height = TOTAL_HEIGHT_MM - heightCalc;
   float capacity = (height/TOTAL_HEIGHT_MM)*100;
 
+
   // --- LCD Display ---
-  lcd.setCursor(0, 1);
-  lcd.print("                "); // clear old value
-  lcd.setCursor(0, 1);
-  lcd.print(capacity, 1); // one decimal place
-  lcd.print("%");
+  if capacity < 80{
+    lcd.setCursor(0, 1);
+    lcd.print("                "); // clear old value
+    lcd.setCursor(0, 1);
+    lcd.print(capacity, 1); // one decimal place
+    lcd.print("%");
+  } else {
+    lcd.setCursor(0, 1);
+    lcd.print("                "); // clear old value
+    lcd.setCursor(0, 1);
+    lcd.print("AT CAPACITY - PRESS BUTTON");
+  }
+
 
   // --- Serial Output ---
   Serial.print("Distance(mm): ");
