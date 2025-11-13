@@ -8,12 +8,13 @@ const int echoPin = 8;
 
 // Tank geometry constants
 const float WIDTH_MM = 250.0;        // mm (horizontal distance)
-const float TOTAL_HEIGHT_MM = 150.0; // mm (max height)
+const float TOTAL_HEIGHT_MM = 160.0; // mm (max height)
 
 float duration;
 float distance;
 float height;
 float capacity;
+float heightCalc;
 
 void setup() {
   lcd.init();
@@ -41,24 +42,10 @@ void loop() {
   duration = pulseIn(echoPin, HIGH);
   distance = (0.034 * duration) / 2 * 10;  // mm
 
-  // Compute vertical height using Pythagoras
-  float heightCalc = pow(distance, 2) - pow(WIDTH_MM, 2);
-  if (heightCalc > 0) {
-    height = sqrt(heightCalc);
-  } else {
-    height = NAN;  // invalid reading (distance < width)
-  }
-
-  // Convert height to capacity percentage
-  if (!isnan(height)) {
-    capacity = (height / TOTAL_HEIGHT_MM) * 100.0;
-  } else {
-    capacity = 100.0;  // Treat NaN as full capacity
-  }
-
-  // Keep within 0–100 range
-  if (capacity > 100) capacity = 100;
-  if (capacity < 0) capacity = 0;
+  // Compute  height 
+  float heightCalc = distance * sin(RADIANS);
+  float height = TOTAL_HEIGHT_MM - heightCalc;
+  float capacity = (height/TOTAL_HEIGHT_MM)*100;
 
   // --- LCD Display ---
   lcd.setCursor(0, 1);
